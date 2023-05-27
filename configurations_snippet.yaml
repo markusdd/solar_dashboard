@@ -1,0 +1,86 @@
+influxdb:
+  host: 127.0.0.1
+  port: 8086
+  # this obviously has to match your setup, these are just placeholders
+  database: homeassistant
+  username: homeassistant
+  password: homeassistant
+  max_retries: 3
+  default_measurement: units
+  # this is recommended to save space, there is no point to save solar data with nanosecond precision
+  precision: ms
+  tags:
+    source: HA
+  # for easier navigation, I would not use this for selection in the dashboard, use entity_id
+  tags_attributes:
+    - friendly_name
+  include:
+    # this will include the sun data for the dashboard, alternatively leave this out and
+    # use Grafanas Sun&Moon plugin
+    domains:
+      - sun
+    entity_globs:
+      - "*.hm800_*"
+    entities:
+      - weather.home
+      - sensor.hichi_gth_sml_total_in
+      - sensor.hichi_gth_sml_total_out
+      - sensor.hichi_gth_sml_power_curr
+
+# if you use tasmota for reading out your smart meter you will have to attach the correct
+# attributes to the MQTT entities, otherwise it will not be recognized by HomeAssitants
+# energy dashboard and it will not land in the correct unit bucket within InfluxDB
+homeassistant:
+  customize:
+    sensor.hichi_gth_sml_volt_p1:
+      device_class: voltage
+      unit_of_measurement: V
+      state_class: measurement
+    sensor.hichi_gth_sml_volt_p2:
+      device_class: voltage
+      unit_of_measurement: V
+      state_class: measurement
+    sensor.hichi_gth_sml_volt_p3:
+      device_class: voltage
+      unit_of_measurement: V
+      state_class: measurement
+    sensor.hichi_gth_sml_amperage_p1:
+      device_class: current
+      unit_of_measurement: A
+      state_class: measurement
+    sensor.hichi_gth_sml_amperage_p2:
+      device_class: current
+      unit_of_measurement: A
+      state_class: measurement
+    sensor.hichi_gth_sml_amperage_p3:
+      device_class: current
+      unit_of_measurement: A
+      state_class: measurement
+    sensor.hichi_gth_sml_phase_angle_p1:
+      device_class: phase_angle
+      unit_of_measurement: °
+      state_class: measurement
+    sensor.hichi_gth_sml_phase_angle_p2:
+      device_class: phase_angle
+      unit_of_measurement: °
+      state_class: measurement
+    sensor.hichi_gth_sml_phase_angle_p3:
+      device_class: phase_angle
+      unit_of_measurement: °
+      state_class: measurement
+    sensor.hichi_gth_sml_frequency:
+      device_class: frequency
+      unit_of_measurement: Hz
+      state_class: measurement
+    sensor.hichi_gth_sml_total_in:
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total
+    sensor.hichi_gth_sml_total_out:
+      device_class: energy
+      unit_of_measurement: kWh
+      state_class: total
+    sensor.hichi_gth_sml_power_curr:
+      device_class: power
+      unit_of_measurement: "W"
+      state_class: measurement
